@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alma Pilates Socks - Специализирани Чорапи за Пилатес</title>
+    <meta name="description" content="Професионални спортни чорапи за Reformer Pilates. Висококачествени, антиплъзгащи чорапи за максимален комфорт и безопасност на тренировките.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo">
+                    <h1>Alma Pilates Socks</h1>
+                </div>
+                <div class="nav-right">
+                    <ul class="nav-menu">
+                        <li><a href="#home">Начало</a></li>
+                        <li><a href="#products">Продукти</a></li>
+                        <li><a href="#contact">Контакти</a></li>
+                    </ul>
+                    <button class="cart-icon" id="cartIcon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </button>
+                </div>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-logo">ALMA</div>
+                <h2 class="hero-title">Pilates Socks</h2>
+                <p class="hero-subtitle">Антиплъзгащи чорапи</p>
+                <div class="hero-buttons">
+                    <a href="#products" class="btn btn-primary">Избери цвят</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-bg"></div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products">
+        <div class="container">
+            <div class="products-grid products-grid-3">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="images/viber_изображение_2026-02-14_19-27-59-043.jpg" alt="Бели Alma Pilates Чорапи" class="product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3>Бели</h3>
+                        <div class="product-footer">
+                            <span class="price">18€</span>
+                            <button class="btn btn-cart" data-product="Бели" data-price="18">Поръчай</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="images/viber_изображение_2026-02-14_19-27-59-043.jpg" alt="Черни Alma Pilates Чорапи" class="product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3>Черни</h3>
+                        <div class="product-footer">
+                            <span class="price">18€</span>
+                            <button class="btn btn-cart" data-product="Черни" data-price="18">Поръчай</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="images/viber_изображение_2026-02-14_19-27-59-043.jpg" alt="Сиви Alma Pilates Чорапи" class="product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3>Сиви</h3>
+                        <div class="product-footer">
+                            <span class="price">18€</span>
+                            <button class="btn btn-cart" data-product="Сиви" data-price="18">Поръчай</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-modal-content">
+            <div class="cart-modal-header">
+                <h2>Количка</h2>
+                <button class="cart-modal-close" id="cartClose">&times;</button>
+            </div>
+            <div class="cart-modal-body" id="cartItems">
+                <p class="empty-cart">Количката е празна</p>
+            </div>
+            <div class="cart-modal-footer">
+                <div class="cart-total">
+                    <span>Обща сума:</span>
+                    <span class="total-price" id="totalPrice">0€</span>
+                </div>
+                <button class="btn btn-primary btn-checkout" id="checkoutBtn">Поръчай</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Свържете се с нас</h2>
+                <p>Имате въпроси? Ще се радваме да ви помогнем!</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="info-item">
+                        <h3>📍 Адрес</h3>
+                        <p>Alma Reformer Pilates Studio<br>
+                        ул. "Пилатес" 10<br>
+                        София 1000, България</p>
+                    </div>
+                    <div class="info-item">
+                        <h3>📞 Телефон</h3>
+                        <p>+359 2 XXX XXXX<br>
+                        +359 8XX XXX XXX</p>
+                    </div>
+                    <div class="info-item">
+                        <h3>✉️ Имейл</h3>
+                        <p>info@almapilates.bg<br>
+                        shop@almapilates.bg</p>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Име</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Имейл</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Телефон</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Съобщение</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Изпрати съобщение</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-simple">
+                <div class="footer-logo">ALMA Pilates Socks</div>
+                <div class="footer-contact">
+                    <p>📧 info@almapilates.bg • 📞 +359 2 XXX XXXX</p>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Alma Pilates Socks. Всички права запазени.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
