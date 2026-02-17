@@ -501,4 +501,4 @@ productCards.forEach(card => {
 // Lazy Loading for Images (Future Enhancement)
 // If you add real images, implement lazy loading here
 
-console.log('🧦 Alma Pilates Socks website loaded successfully!');
+console.log('🧦 ALMA - Pilates - Socks website loaded successfully!');
