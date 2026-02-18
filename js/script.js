@@ -510,35 +510,54 @@ window.addEventListener('orientationchange', setViewportHeight);
 if ('ontouchstart' in window) {
     document.body.classList.add('touch-device');
     
-    // Faster click events on mobile
-    let touchStartX = 0;
-    let touchStartY = 0;
+    // Track touch positions to prevent accidental clicks during scroll
+    const touchData = new Map();
     
-    document.addEventListener('touchstart', (e) => {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-    }, { passive: true });
-    
-    document.addEventListener('touchmove', (e) => {
-        const touchEndX = e.touches[0].clientX;
-        const touchEndY = e.touches[0].clientY;
-        const diffX = Math.abs(touchEndX - touchStartX);
-        const diffY = Math.abs(touchEndY - touchStartY);
+    // Prevent double-tap zoom and accidental clicks on buttons during scroll
+    document.querySelectorAll('button, .btn').forEach(element => {
+        element.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            touchData.set(element, {
+                startX: touch.clientX,
+                startY: touch.clientY,
+                startTime: Date.now(),
+                moved: false
+            });
+        }, { passive: true });
         
-        // If it's a swipe gesture, not a tap
-        if (diffX > 10 || diffY > 10) {
-            // Handle swipe if needed
-        }
-    }, { passive: true });
+        element.addEventListener('touchmove', (e) => {
+            const data = touchData.get(element);
+            if (data) {
+                const touch = e.touches[0];
+                const diffX = Math.abs(touch.clientX - data.startX);
+                const diffY = Math.abs(touch.clientY - data.startY);
+                
+                // Mark as moved if movement is more than 10px
+                if (diffX > 10 || diffY > 10) {
+                    data.moved = true;
+                }
+            }
+        }, { passive: true });
+        
+        element.addEventListener('touchend', (e) => {
+            const data = touchData.get(element);
+            
+            // Only trigger click if:
+            // 1. Touch didn't move significantly (not scrolling)
+            // 2. Touch duration is reasonable (not a long press)
+            if (data && !data.moved && (Date.now() - data.startTime) < 500) {
+                e.preventDefault();
+                element.click();
+            }
+            
+            touchData.delete(element);
+        }, { passive: false });
+        
+        element.addEventListener('touchcancel', () => {
+            touchData.delete(element);
+        });
+    });
 }
-
-// Prevent double-tap zoom on buttons
-document.querySelectorAll('button, .btn').forEach(element => {
-    element.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        element.click();
-    }, { passive: false });
-});
 
 // Smooth scroll polyfill for older browsers
 if (!('scrollBehavior' in document.documentElement.style)) {
