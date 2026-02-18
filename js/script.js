@@ -6,6 +6,13 @@ if (hamburger && navRight) {
     hamburger.addEventListener('click', () => {
         navRight.classList.toggle('active');
         hamburger.classList.toggle('active');
+        
+        // Prevent body scroll when menu is open
+        if (navRight.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
     });
 
     // Close menu when clicking on a link
@@ -13,7 +20,19 @@ if (hamburger && navRight) {
         link.addEventListener('click', () => {
             navRight.classList.remove('active');
             hamburger.classList.remove('active');
+            document.body.style.overflow = '';
         });
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (navRight.classList.contains('active') && 
+            !navRight.contains(e.target) && 
+            !hamburger.contains(e.target)) {
+            navRight.classList.remove('active');
+            hamburger.classList.remove('active');
+            document.body.style.overflow = '';
+        }
     });
 }
 
@@ -328,7 +347,7 @@ function showNotification(message, type = 'info') {
     
     // Create notification element
     const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
+    notification.className = `notification ${type}`;
     
     const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ';
     notification.innerHTML = `
@@ -340,14 +359,17 @@ function showNotification(message, type = 'info') {
     
     // Trigger animation
     setTimeout(() => {
-        notification.classList.add('show');
+        notification.style.animation = 'slideInRight 0.3s ease-out forwards';
     }, 10);
     
     // Remove notification after 3 seconds
     setTimeout(() => {
-        notification.classList.remove('show');
+        notification.style.animation = 'slideOutRight 0.3s ease-out forwards';
         setTimeout(() => {
             notification.remove();
+            if (notificationContainer.children.length === 0) {
+                notificationContainer.remove();
+            }
         }, 300);
     }, 3000);
 }
@@ -357,106 +379,78 @@ const notificationStyles = document.createElement('style');
 notificationStyles.textContent = `
     .notification-container {
         position: fixed;
-        top: 100px;
+        top: 90px;
         right: 20px;
         z-index: 10000;
         display: flex;
         flex-direction: column;
         gap: 10px;
+        pointer-events: none;
     }
     
-    .notification {
-        background: white;
-        padding: 1rem 1.5rem;
-        border-radius: 10px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        min-width: 300px;
-        opacity: 0;
-        transform: translateX(400px);
-        transition: all 0.3s ease;
-    }
-    
-    .notification.show {
-        opacity: 1;
-        transform: translateX(0);
+    .notification-message {
+        flex: 1;
+        color: var(--text-dark);
+        font-weight: 500;
     }
     
     .notification-icon {
-        width: 30px;
-        height: 30px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: bold;
         font-size: 1.2rem;
+        flex-shrink: 0;
     }
     
-    .notification-success .notification-icon {
-        background: #48bb78;
+    .notification.success .notification-icon {
+        background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
         color: white;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
     }
     
-    .notification-error .notification-icon {
-        background: #f56565;
+    .notification.error .notification-icon {
+        background: linear-gradient(135deg, #e53e3e 0%, #fc8181 100%);
         color: white;
+        box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
     }
     
-    .notification-info .notification-icon {
-        background: #4299e1;
+    .notification.info .notification-icon {
+        background: linear-gradient(135deg, #818CF8 0%, #A5B4FC 100%);
         color: white;
+        box-shadow: 0 4px 15px rgba(129, 140, 248, 0.4);
     }
     
-    .notification-message {
-        flex: 1;
-        color: #2d3748;
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(400px);
+            opacity: 0;
+        }
     }
     
-    @media (max-width: 480px) {
+    @media (max-width: 768px) {
         .notification-container {
             right: 10px;
             left: 10px;
+            top: 80px;
         }
         
-        .notification {
-            min-width: auto;
-            width: 100%;
-        }
-    }
-    
-    /* Mobile Navigation Styles */
-    @media (max-width: 768px) {
-        .nav-menu {
-            position: fixed;
-            left: -100%;
-            top: 70px;
-            flex-direction: column;
-            background-color: white;
-            width: 100%;
-            text-align: center;
-            transition: 0.3s;
-            box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
-            padding: 2rem 0;
-            gap: 1rem;
-        }
-        
-        .nav-menu.active {
-            left: 0;
-        }
-        
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-        
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-        
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -6px);
+        @keyframes slideOutRight {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
         }
     }
 `;
@@ -501,4 +495,77 @@ productCards.forEach(card => {
 // Lazy Loading for Images (Future Enhancement)
 // If you add real images, implement lazy loading here
 
+// Mobile viewport height fix (especially for iOS)
+function setViewportHeight() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+// Set on load and on resize
+setViewportHeight();
+window.addEventListener('resize', setViewportHeight);
+window.addEventListener('orientationchange', setViewportHeight);
+
+// Optimize touch interactions
+if ('ontouchstart' in window) {
+    document.body.classList.add('touch-device');
+    
+    // Faster click events on mobile
+    let touchStartX = 0;
+    let touchStartY = 0;
+    
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    
+    document.addEventListener('touchmove', (e) => {
+        const touchEndX = e.touches[0].clientX;
+        const touchEndY = e.touches[0].clientY;
+        const diffX = Math.abs(touchEndX - touchStartX);
+        const diffY = Math.abs(touchEndY - touchStartY);
+        
+        // If it's a swipe gesture, not a tap
+        if (diffX > 10 || diffY > 10) {
+            // Handle swipe if needed
+        }
+    }, { passive: true });
+}
+
+// Prevent double-tap zoom on buttons
+document.querySelectorAll('button, .btn').forEach(element => {
+    element.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        element.click();
+    }, { passive: false });
+});
+
+// Smooth scroll polyfill for older browsers
+if (!('scrollBehavior' in document.documentElement.style)) {
+    const scrollToSmooth = (element, duration = 500) => {
+        const targetPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const startPosition = window.pageYOffset;
+        const distance = targetPosition - startPosition - 80;
+        let startTime = null;
+
+        const animation = (currentTime) => {
+            if (startTime === null) startTime = currentTime;
+            const timeElapsed = currentTime - startTime;
+            const run = ease(timeElapsed, startPosition, distance, duration);
+            window.scrollTo(0, run);
+            if (timeElapsed < duration) requestAnimationFrame(animation);
+        };
+
+        const ease = (t, b, c, d) => {
+            t /= d / 2;
+            if (t < 1) return c / 2 * t * t + b;
+            t--;
+            return -c / 2 * (t * (t - 2) - 1) + b;
+        };
+
+        requestAnimationFrame(animation);
+    };
+}
+
 console.log('🧦 ALMA - Pilates - Socks website loaded successfully!');
+console.log('📱 Mobile optimizations enabled!');
