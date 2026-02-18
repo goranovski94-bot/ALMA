@@ -6,6 +6,13 @@ if (hamburger && navRight) {
     hamburger.addEventListener('click', () => {
         navRight.classList.toggle('active');
         hamburger.classList.toggle('active');
+        
+        // Prevent body scroll when menu is open
+        if (navRight.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
     });
 
     // Close menu when clicking on a link
@@ -13,7 +20,19 @@ if (hamburger && navRight) {
         link.addEventListener('click', () => {
             navRight.classList.remove('active');
             hamburger.classList.remove('active');
+            document.body.style.overflow = '';
         });
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (navRight.classList.contains('active') && 
+            !navRight.contains(e.target) && 
+            !hamburger.contains(e.target)) {
+            navRight.classList.remove('active');
+            hamburger.classList.remove('active');
+            document.body.style.overflow = '';
+        }
     });
 }
 
@@ -501,4 +520,77 @@ productCards.forEach(card => {
 // Lazy Loading for Images (Future Enhancement)
 // If you add real images, implement lazy loading here
 
+// Mobile viewport height fix (especially for iOS)
+function setViewportHeight() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+// Set on load and on resize
+setViewportHeight();
+window.addEventListener('resize', setViewportHeight);
+window.addEventListener('orientationchange', setViewportHeight);
+
+// Optimize touch interactions
+if ('ontouchstart' in window) {
+    document.body.classList.add('touch-device');
+    
+    // Faster click events on mobile
+    let touchStartX = 0;
+    let touchStartY = 0;
+    
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    
+    document.addEventListener('touchmove', (e) => {
+        const touchEndX = e.touches[0].clientX;
+        const touchEndY = e.touches[0].clientY;
+        const diffX = Math.abs(touchEndX - touchStartX);
+        const diffY = Math.abs(touchEndY - touchStartY);
+        
+        // If it's a swipe gesture, not a tap
+        if (diffX > 10 || diffY > 10) {
+            // Handle swipe if needed
+        }
+    }, { passive: true });
+}
+
+// Prevent double-tap zoom on buttons
+document.querySelectorAll('button, .btn').forEach(element => {
+    element.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        element.click();
+    }, { passive: false });
+});
+
+// Smooth scroll polyfill for older browsers
+if (!('scrollBehavior' in document.documentElement.style)) {
+    const scrollToSmooth = (element, duration = 500) => {
+        const targetPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const startPosition = window.pageYOffset;
+        const distance = targetPosition - startPosition - 80;
+        let startTime = null;
+
+        const animation = (currentTime) => {
+            if (startTime === null) startTime = currentTime;
+            const timeElapsed = currentTime - startTime;
+            const run = ease(timeElapsed, startPosition, distance, duration);
+            window.scrollTo(0, run);
+            if (timeElapsed < duration) requestAnimationFrame(animation);
+        };
+
+        const ease = (t, b, c, d) => {
+            t /= d / 2;
+            if (t < 1) return c / 2 * t * t + b;
+            t--;
+            return -c / 2 * (t * (t - 2) - 1) + b;
+        };
+
+        requestAnimationFrame(animation);
+    };
+}
+
 console.log('🧦 ALMA - Pilates - Socks website loaded successfully!');
+console.log('📱 Mobile optimizations enabled!');
