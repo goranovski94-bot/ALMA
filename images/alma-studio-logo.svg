@@ -1,0 +1,12 @@
+<svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ALMA STUDIO logo">
+  <defs>
+    <linearGradient id="almaGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#667eea" />
+      <stop offset="50%" stop-color="#764ba2" />
+      <stop offset="100%" stop-color="#f093fb" />
+    </linearGradient>
+  </defs>
+  <rect width="320" height="120" fill="none" />
+  <text x="50%" y="54%" text-anchor="middle" font-family="Poppins, Arial, sans-serif" font-weight="800" font-size="64" letter-spacing="8" fill="url(#almaGradient)">ALMA</text>
+  <text x="50%" y="88%" text-anchor="middle" font-family="Poppins, Arial, sans-serif" font-weight="600" font-size="16" letter-spacing="6" fill="#6B7280">STUDIO</text>
+</svg>
